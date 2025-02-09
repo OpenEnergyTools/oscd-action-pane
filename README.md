@@ -87,61 +87,6 @@ npm start
 To run a local development server that serves the basic demo located in `demo/index.html`
 
 
-## `src/oscd-action-pane.ts`:
-
-### class: `OscdActionPane`, `oscd-action-pane`
-
-#### Superclass
-
-| Name         | Module | Package |
-| ------------ | ------ | ------- |
-| `LitElement` |        | lit     |
-
-#### Fields
-
-| Name          | Privacy | Type                  | Default | Description                                                   | Inherited From |
-| ------------- | ------- | --------------------- | ------- | ------------------------------------------------------------- | -------------- |
-| `label`       |         | `string \| undefined` |         | caption text, displayed in the header                         |                |
-| `icon`        |         | `string \| undefined` |         | icon name, displayed unless the "icon" slot is filled         |                |
-| `secondary`   |         | `boolean`             | `false` | color header with secondary theme color while focus is within |                |
-| `highlighted` |         | `boolean`             | `false` | highlight pane with dotted outline                            |                |
-| `level`       |         | `number`              | `1`     | nesting level, default (closest pane ancestor's level) + 1    |                |
-
-#### CSS Properties
-
-| Name                                  | Default                   | Description                        |
-| ------------------------------------- | ------------------------- | ---------------------------------- |
-| `--oscd-action-icon-theme-primary`    | `--oscd-theme-primary`    | Color for border on even levels.   |
-| `--oscd-action-icon-theme-on-primary` | `--oscd-theme-on-primary` | Pane color for the uneven levels.  |
-| `--oscd-action-icon-theme-secondary`  | `--oscd-theme-secondary`  | Color for border on uneven levels. |
-| `--oscd-action-pane-theme-surface`    | `--oscd-theme-surface`    | Pane color for the even levels.    |
-| `--oscd-action-icon-theme-on-surface` | `--oscd-theme-on-surface` | Icon and label color.              |
-| `--oscd-action-icon-theme-font`       | `--oscd-theme-font`       | Font for label.                    |
-
-#### Slots
-
-| Name     | Description                                                              |
-| -------- | ------------------------------------------------------------------------ |
-| `action` | May contain up to eight icon buttons.                                    |
-| `icon`   | If filled overrides the icon property.                                   |
-|          | The default slot will be rendered into the pane body in a single column. |
-
-<hr/>
-
-### Exports
-
-| Kind | Name             | Declaration    | Module                  | Package |
-| ---- | ---------------- | -------------- | ----------------------- | ------- |
-| `js` | `OscdActionPane` | OscdActionPane | src/oscd-action-pane.ts |         |
-
-## `src/OscdActionPane.ts`:
-
-### Exports
-
-| Kind                        | Name               | Declaration    | Module                   | Package |
-| --------------------------- | ------------------ | -------------- | ------------------------ | ------- |
-| `custom-element-definition` | `oscd-action-pane` | OscdActionPane | /src/oscd-action-pane.js |         |
-| `js`                        | `OscdActionPane`   | OscdActionPane | src/OscdActionPane.ts    |         |
 
 
 

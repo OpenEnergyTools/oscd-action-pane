@@ -1,8 +1,10 @@
 import { css, html, LitElement, nothing, TemplateResult } from 'lit';
-import { classMap } from 'lit/directives/class-map.js';
 import { property } from 'lit/decorators.js';
+import { classMap } from 'lit/directives/class-map.js';
 
-import '@material/mwc-icon';
+import { ScopedElementsMixin } from '@open-wc/scoped-elements/lit-element.js';
+
+import { MdIcon } from '@scopedelement/material-web/icon/MdIcon.js';
 
 function closestTo<E extends Element>(node: Node, selector: string): E | null {
   const closest =
@@ -33,19 +35,27 @@ function closestTo<E extends Element>(node: Node, selector: string): E | null {
  * @summary A responsive container rendering actions in a header.
  * @tag oscd-action-pane
  */
-export class OscdActionPane extends LitElement {
+export class OscdActionPane extends ScopedElementsMixin(LitElement) {
+  static scopedElements = {
+    'md-icon': MdIcon,
+  };
+
   /** caption text, displayed in the header */
   @property({ type: String })
   label?: string;
+
   /** icon name, displayed unless the "icon" slot is filled */
   @property({ type: String })
   icon?: string;
+
   /** color header with secondary theme color while focus is within */
   @property({ type: Boolean })
   secondary = false;
+
   /** highlight pane with dotted outline */
   @property({ type: Boolean })
   highlighted = false;
+
   /** nesting level, default (closest pane ancestor's level) + 1 */
   @property({ type: Number })
   level = 1;
@@ -65,9 +75,7 @@ export class OscdActionPane extends LitElement {
   private renderHeader(): TemplateResult {
     const content = html`<span
         ><slot name="icon"
-          >${this.icon
-            ? html`<mwc-icon>${this.icon}</mwc-icon>`
-            : nothing}</slot
+          >${this.icon ? html`<md-icon>${this.icon}</md-icon>` : nothing}</slot
         ></span
       >
       ${this.label ?? nothing}
@@ -75,7 +83,7 @@ export class OscdActionPane extends LitElement {
 
     const headingLevel = Math.floor(Math.max(this.level, 1));
     // Sometimes a TemplateResult is passed in as Label, not a string. So only when it's a string show a title.
-    const title = typeof this.label === 'string' ? this.label : '';
+    const title = this.label ?? '';
     switch (headingLevel) {
       case 1:
         return html`<h1 title="${title}">${content}</h1>`;
@@ -181,18 +189,18 @@ export class OscdActionPane extends LitElement {
       float: right;
     }
 
-    mwc-icon {
+    md-icon {
       vertical-align: middle;
       position: relative;
       top: -0.1em;
-      --mdc-icon-size: 1em;
+      --md-icon-size: 1em;
     }
 
     ::slotted([slot='icon']) {
       vertical-align: middle;
       position: relative;
       top: -0.1em;
-      --mdc-icon-size: 1em;
+      --md-icon-size: 1em;
     }
   `;
 }

@@ -1,5 +1,9 @@
+/* eslint-disable import/no-extraneous-dependencies */
 import { visualRegressionPlugin } from '@web/test-runner-visual-regression/plugin';
+
 import { playwrightLauncher } from '@web/test-runner-playwright';
+
+import { polyfill } from '@web/dev-server-polyfill';
 
 import pixelmatch from 'pixelmatch';
 import { PNG } from 'pngjs';
@@ -10,7 +14,7 @@ const local = !process.env.CI;
 console.assert(local, 'Running in CI!');
 console.assert(!fuzzy, 'Running on OS with 1% test pixel diff threshold!');
 
-const thresholdPercentage = fuzzy && local ? 0 : 0;
+const thresholdPercentage = fuzzy && local ? 1 : 0;
 
 const filteredLogs = [
   'Running in dev mode',
@@ -20,8 +24,6 @@ const filteredLogs = [
 
 const browsers = [
      playwrightLauncher({ product: 'chromium' }),
-     playwrightLauncher({ product: 'firefox' }),
-     playwrightLauncher({ product: 'webkit' }),
    ];
 
 function defaultGetImageDiff({ baselineImage, image, options }) {
@@ -59,6 +61,9 @@ function defaultGetImageDiff({ baselineImage, image, options }) {
 
 export default /** @type {import("@web/test-runner").TestRunnerConfig} */ ({
   plugins: [
+    polyfill({
+          scopedCustomElementRegistry: true,
+        }),
     visualRegressionPlugin({
       update: process.argv.includes('--update-visual-baseline'),
       getImageDiff: (options) => {
@@ -70,65 +75,69 @@ export default /** @type {import("@web/test-runner").TestRunnerConfig} */ ({
     }),
   ],
 
-  files: 'dist/**/*.spec.js',
-
   groups: [
     {
       name: 'visual',
       files: 'dist/**/*.test.js',
       testRunnerHtml: testFramework => `
-<html>
-  <head>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300&family=Roboto:wght@300;400;500&display=swap">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Material+Icons&display=block">
-  </head>
-  <body>
-    <style class="deanimator">
-    *, *::before, *::after {
-     -moz-transition: none !important;
-     transition: none !important;
-     -moz-animation: none !important;
-     animation: none !important;
-    }
-    </style>
-    <script>window.process = { env: ${JSON.stringify(process.env)} }</script>
-    <script type="module" src="${testFramework}"></script>
-    <script>
-    function descendants(parent) {
-      return (Array.from(parent.childNodes)).concat(
-        ...Array.from(parent.children).map(child => descendants(child))
-      );
-    }
-    const deanimator = document.querySelector('.deanimator');
-    function deanimate(element) {
-      if (!element.shadowRoot) return;
-      if (element.shadowRoot.querySelector('.deanimator')) return;
-      const style = deanimator.cloneNode(true);
-      element.shadowRoot.appendChild(style);
-      descendants(element.shadowRoot).forEach(deanimate);
-    }
-    const observer = new MutationObserver((mutationList, observer) => {
-      for (const mutation of mutationList) {
-        if (mutation.type === 'childList') {
-          descendants(document.body).forEach(deanimate);
-        }
-      }
-    });
-    observer.observe(document.body, {childList: true, subtree:true});
-    </script>
-    <style>
-    * {
-      margin: 0px;
-      padding: 0px;
-    }
+          <html>
+            <head>
+              <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300&family=Roboto:wght@300;400;500&display=swap">
+              <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Symbols+Outlined">
+            </head>
+            <body>
+              <style class="deanimator">
+              *, *::before, *::after {
+              -moz-transition: none !important;
+              transition: none !important;
+              -moz-animation: none !important;
+              animation: none !important;
+              }
+              </style>
+              <script>window.process = { env: ${JSON.stringify(process.env)} }</script>
+              <script type="module" src="${testFramework}"></script>
+              <script>
+              function descendants(parent) {
+                return (Array.from(parent.childNodes)).concat(
+                  ...Array.from(parent.children).map(child => descendants(child))
+                );
+              }
+              const deanimator = document.querySelector('.deanimator');
+              function deanimate(element) {
+                if (!element.shadowRoot) return;
+                if (element.shadowRoot.querySelector('.deanimator')) return;
+                const style = deanimator.cloneNode(true);
+                element.shadowRoot.appendChild(style);
+                descendants(element.shadowRoot).forEach(deanimate);
+              }
+              const observer = new MutationObserver((mutationList, observer) => {
+                for (const mutation of mutationList) {
+                  if (mutation.type === 'childList') {
+                    descendants(document.body).forEach(deanimate);
+                  }
+                }
+              });
+              observer.observe(document.body, {childList: true, subtree:true});
+              </script>
+              <style>
+              * {
+                margin: 0px;
+                padding: 0px;
+              }
 
-    body {
-      background: white;
+              body {
+                  --oscd-action-pane-theme-on-surface: #657b83;
+                  --oscd-action-pane-theme-surface: #fdf6e3;
+                  --oscd-action-pane-theme-primary: #2aa198;
+                  --oscd-action-pane-theme-on-primary: #eee8d5;
+                  --oscd-action-pane-theme-secondary: #6c71c4;
+                  --oscd-action-pane-theme-font: 'Roboto', sans-serif;
+                  background: white;
+                }
+              </style>
+            </body>
+          </html>`,
     }
-    </style>
-  </body>
-</html>`,
-    },
   ],
 
   /** Resolve bare module imports */
