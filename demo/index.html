@@ -27,8 +27,10 @@
 
     <script type="module">
       import { html, render, css } from 'lit';
-      import '../dist/OscdActionPane.js';
-      import '@material/mwc-icon';
+      import '../dist/oscd-action-pane.js';
+      import {MdIcon} from '@scopedelement/material-web/icon/MdIcon.js'
+
+      window.customElements.define('md-icon',MdIcon);
 
       const title = 'Click this pane!';
       const icon = 'shopping_cart';
@@ -71,6 +73,11 @@
                   when selected and always highlighted with dotted lines
                 </oscd-action-pane>
               </oscd-action-pane>
+              <oscd-action-pane
+              .label=${title}
+              .icon=${icon}
+              secondary
+              .level=${level}/>
             </oscd-action-pane>
           </oscd-action-pane>
         `,

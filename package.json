@@ -1,11 +1,11 @@
 {
-  "name": "@openscd/oscd-action-pane",
-  "description": "Webcomponent oscd-action-pane following open-wc recommendations",
+  "name": "@openenergytools/oscd-action-pane",
+  "description": "Material web type action pane",
   "license": "Apache-2.0",
-  "author": "Alliander",
-  "version": "1.0.1",
-  "browser": "dist/OscdActionPane.js",
-  "module": "dist/OscdActionPane.js",
+  "author": "Jakob Vogelsang",
+  "version": "1.0.0",
+  "browser": "./dist/OscdActionPane.js",
+  "module": "./dist/OscdActionPane.js",
   "files": [
     "dist/**/*"
   ],
@@ -20,48 +20,98 @@
     "prepublish": "tsc && npm run analyze -- --exclude dist",
     "lint": "eslint --ext .ts,.html . --ignore-path .gitignore && prettier \"**/*.ts\" --check --ignore-path .gitignore",
     "format": "eslint --ext .ts,.html . --fix --ignore-path .gitignore && prettier \"**/*.ts\" --write --ignore-path .gitignore",
-    "test": "tsc --p tsconfig.test.json && wtr --coverage",
-    "test:unit": "tsc --p tsconfig.test.json && wtr --group default",
-    "test:visual": "tsc --p tsconfig.test.json && wtr --group visual",
-    "test:update": "tsc --p tsconfig.test.json && wtr --group visual --update-visual-baseline",
-    "test:watch": "tsc --p tsconfig.test.json && concurrently -k -r \"tsc --p tsconfig.test.json --watch --preserveWatchOutput\" \"wtr --watch\"",
-    "storybook": "tsc --p tsconfig.test.json && npm run analyze -- --exclude dist && concurrently -k -r \"tsc --p tsconfig.test.json --watch --preserveWatchOutput\" \"wds -c .storybook/server.mjs\"",
-    "storybook:build": "tsc --p tsconfig.test.json && npm run analyze -- --exclude dist && build-storybook",
-    "deploy": "npm run storybook:build && gh-pages --dist storybook-static"
+    "test": "tsc && wtr --coverage",
+    "test:watch": "tsc && concurrently -k -r \"tsc --watch --preserveWatchOutput\" \"wtr --group visual --watch --coverage\"",
+    "test:update": "tsc && wtr --group visual --update-visual-baseline"
   },
   "dependencies": {
-    "@material/mwc-icon": "^0.27.0",
-    "lit": "^2.7.4",
-    "lit-element": "2.5.1",
-    "lit-html": "1.4.1"
+    "@open-wc/scoped-elements": "^3.0.5",
+    "@scopedelement/material-web": "^3.4.1",
+    "lit": "^3.0.0"
   },
   "devDependencies": {
     "@commitlint/cli": "^17.3.0",
     "@commitlint/config-conventional": "^17.3.0",
     "@custom-elements-manifest/analyzer": "^0.4.17",
+    "@esm-bundle/chai": "^4.3.4-fix.0",
     "@open-wc/eslint-config": "^8.0.2",
-    "@open-wc/testing": "^3.1.6",
-    "@typescript-eslint/eslint-plugin": "^4.33.0",
-    "@typescript-eslint/parser": "^4.33.0",
-    "@web/dev-server": "^0.1.34",
-    "@web/dev-server-storybook": "^0.5.4",
-    "@web/test-runner": "^0.14.0",
-    "@web/test-runner-playwright": "^0.9.0",
-    "@web/test-runner-visual-regression": "^0.7.0",
+    "@open-wc/testing": "^4.0.0",
+    "@types/mocha": "^10.0.10",
+    "@typescript-eslint/eslint-plugin": "^8.18.1",
+    "@typescript-eslint/parser": "^8.18.1",
+    "@web/dev-server": "^0.4.6",
+    "@web/dev-server-polyfill": "^1.0.4",
+    "@web/dev-server-storybook": "^0.0.2",
+    "@web/test-runner": "0.19.0",
+    "@web/test-runner-commands": "0.9.0",
+    "@web/test-runner-playwright": "0.11.0",
+    "@web/test-runner-visual-regression": "0.9.0",
     "cem-plugin-readme": "^0.1.4",
     "concurrently": "^5.3.0",
-    "eslint": "^7.32.0",
+    "eslint": "8.57.0",
     "eslint-config-prettier": "^8.3.0",
-    "eslint-plugin-babel": "^5.3.1",
-    "eslint-plugin-tsdoc": "^0.2.17",
-    "gh-pages": "^4.0.0",
+    "gh-pages": "^5.0.0",
     "husky": "^4.3.8",
     "lint-staged": "^10.5.4",
     "prettier": "^2.4.1",
+    "sinon": "^15.2.0",
     "tslib": "^2.3.1",
-    "typescript": "^4.5.2"
+    "typescript": "5.5.4"
   },
   "customElements": "custom-elements.json",
+  "eslintConfig": {
+    "parser": "@typescript-eslint/parser",
+    "extends": [
+      "@open-wc",
+      "prettier"
+    ],
+    "plugins": [
+      "@typescript-eslint"
+    ],
+    "rules": {
+      "no-unused-vars": "off",
+      "sort-imports": [
+        "error",
+        {
+          "ignoreCase": true,
+          "allowSeparatedGroups": true
+        }
+      ],
+      "class-methods-use-this": [
+        "error",
+        {
+          "exceptMethods": [
+            "locale"
+          ]
+        }
+      ],
+      "@typescript-eslint/no-explicit-any": [
+        "error",
+        {
+          "ignoreRestArgs": true
+        }
+      ],
+      "import/no-extraneous-dependencies": [
+        "error",
+        {
+          "devDependencies": [
+            "**/*.test.ts",
+            "**/*.spec.ts",
+            "**/*.stories.ts",
+            "**/*.config.js"
+          ]
+        }
+      ],
+      "import/no-unresolved": "off",
+      "import/extensions": [
+        "error",
+        "always",
+        {
+          "ignorePackages": true
+        }
+      ]
+    }
+  },
   "prettier": {
     "singleQuote": true,
     "arrowParens": "avoid"
@@ -82,5 +132,8 @@
       "eslint --fix",
       "prettier --write"
     ]
+  },
+  "optionalDependencies": {
+    "@rollup/rollup-linux-x64-gnu": "^4.29.1"
   }
 }
