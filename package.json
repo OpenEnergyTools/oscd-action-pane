@@ -3,9 +3,9 @@
   "description": "Material web type action pane",
   "license": "Apache-2.0",
   "author": "Jakob Vogelsang",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "browser": "./dist/OscdActionPane.js",
-  "module": "./dist/OscdActionPane.js",
+  "main": "./dist/OscdActionPane.js",
   "files": [
     "dist/**/*"
   ],
